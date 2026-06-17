@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<input placeholder="type your message" id="msg_content"/>
+<button onclick="sendMessage()"> send message </button>
+
+<script>
+    connectToChatHub();
+
+    function sendMessage() {
+        const formdata = new FormData();
+        formdata.append("message", document.querySelector('#msg_content').value);
+
+        const response = fetch('/chathub/sendMsg', {method: 'post', body: formdata});
+        console.log('MessageChannel sent')
+    }
+
+    async function  connectToChatHub() {
+        const response = await fetch('/chathub/ListenMessages')
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder()
+
+        while(true) {
+            const stream = await reader.read();
+            if(stream.done) break;
+            
+            var text = decoder.decode(stream.value)
+
+            console.log(text);
+        }
+    }
+
+</script>
