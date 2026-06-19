@@ -1,15 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using chat.Features.User.Command.SendMessage;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
 namespace chat.Controllers
 {
     public class ChatHubController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public ChatHubController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
         static List<MSG> messages = new List<MSG>();
         
         // to send messages
-        public async Task sendMsg(string message)
+        public async Task sendMsg(string message,int UserId)
         {
+
+            var result = _mediator.Send(new SendMessageCommand(message, UserId));
 
             var m = new MSG() { Id = messages.Count, Content = message };
             messages.Add(m);

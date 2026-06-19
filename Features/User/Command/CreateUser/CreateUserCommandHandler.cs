@@ -1,8 +1,10 @@
 ﻿
 using chat.Controllers;
 using chat.Data;
+using chat.Entity;
 using chat.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace chat.Features.User.Command.CreateUser
 {
@@ -21,11 +23,17 @@ namespace chat.Features.User.Command.CreateUser
             {
                 Name = command.Name
             };
+            var UserExists = await _context.users.AnyAsync(x => x.Name == command.Name);
+
+            if (UserExists) return 0;
             await _context.users.AddAsync(user);
 
             await _context.SaveChangesAsync();
 
             return user.Id;
+
+
+            
         } 
     }
 }

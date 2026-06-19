@@ -2,16 +2,60 @@
     ViewData["Title"] = "Home Page";
     Layout = null;
 }
+<style>
+    .show{
+        display:block !important;
+    }
+    .hide{
+        display:none;
+    }
 
-<input placeholder="type your message" id="msg_content"/>
-<button onclick="sendMessage()"> send message </button>
+
+</style>
+
+<div wrap-content style="display:none;">
+    <input type="hidden" id="userId"/>
+    <h5>Welcome <b user></b></h5>
+
+    <input placeholder="type your message" id="msg_content" />
+    <button onclick="sendMessage()"> send message </button>
+</div>
 
 <script>
+
+    CreateUser()
+
+    async function CreateUser()
+    {
+        var username = prompt("Enter Your name ..")
+        if(username) {
+            const formdata = new FormData();
+            formdata.append("UserName", username);
+           const response= await fetch('/User/CreateUser',{
+               method:'post',
+               body:formdata
+           });
+           const result = await response.json();
+
+           if(result>0){
+                document.querySelector('[user]').innerHTML=username
+                document.querySelector('[wrap-content]').className="show";
+           } else document.querySelector('[wrap-content]').className="hide";
+
+
+           console.log(result.id)
+           document.querySelector('#userId').value = result.id;
+
+        }
+    }
+
+
     connectToChatHub();
 
     function sendMessage() {
         const formdata = new FormData();
         formdata.append("message", document.querySelector('#msg_content').value);
+        formdata.append("UserId", document.querySelector('#userId').value);
 
         const response = fetch('/chathub/sendMsg', {method: 'post', body: formdata});
         console.log('MessageChannel sent')
