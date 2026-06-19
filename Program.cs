@@ -1,4 +1,5 @@
 using chat.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conn"));
 });
 
+//builder.Services.AddMediatR(cfg =>
+//{
+//    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+//});
+
+builder.Services.AddMediatR(typeof(Program).Assembly);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

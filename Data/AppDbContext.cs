@@ -1,4 +1,4 @@
-﻿using chat.Models;
+﻿using chat.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace chat.Data
@@ -10,5 +10,7 @@ namespace chat.Data
 
         }
         public DbSet<UserDetails> users => Set<UserDetails>();
+
+        public DbSet<Message> messages => Set<Message>();
     }
 }
